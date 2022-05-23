@@ -71,6 +71,9 @@
     <module>tests</module>
     <module>native-io</module>
     <module>testtools</module>
+
+    <!--module added for ISW2 project, software testing part-->
+    <module>bookkeeper-aggregate-coverage</module>
   </modules>
   <mailingLists>
     <mailingList>
@@ -111,6 +114,12 @@
     <redirectTestOutputToFile>true</redirectTestOutputToFile>
     <testRetryCount>2</testRetryCount>
     <test.additional.args />
+
+    <!--Adding this part for Jacoco Coverage ISW2 sw testing module-->
+    <sonar.coverage.jacoco.xmlReportPaths>${maven.multiModuleProjectDirectory}/tests/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+     <sonar.organization>valeriomoroni95</sonar.organization>
+     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+     <sonar.projectKey>valeriomoroni95_bookkeeper</sonar.projectKey>
 
     <!-- dependencies -->
     <arquillian-cube.version>1.18.2</arquillian-cube.version>
@@ -1243,6 +1252,29 @@
                   <!-- we have a dedicated distribution module in bookkeeper-dist -->
                   <skipAssembly>true</skipAssembly>
                 </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <!-- profile for isw2 project -->
+    <profile>
+      <id>isw2-coverage</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>prepare-agent</id>
+                <goals>
+                  <goal>prepare-agent</goal>
+                </goals>
               </execution>
             </executions>
           </plugin>
