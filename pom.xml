@@ -119,7 +119,7 @@
     <sonar.coverage.jacoco.xmlReportPaths>${maven.multiModuleProjectDirectory}/tests/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
     <sonar.organization>valeriomoroni95</sonar.organization>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-    <sonar.projectKey>valeriomoroni95_bookkeeper</sonar.projectKey>
+    <!--<sonar.projectKey>valeriomoroni95_bookkeeper</sonar.projectKey>-->
 
     <!-- dependencies -->
     <arquillian-cube.version>1.18.2</arquillian-cube.version>
