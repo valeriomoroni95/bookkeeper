@@ -907,7 +907,8 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${maven-surefire-plugin.version}</version>
         <configuration>
-          <argLine>-Xmx2G -Djava.net.preferIPv4Stack=true -Dio.netty.leakDetection.level=paranoid ${test.additional.args}</argLine>
+          <!--This line generates conflicts with Jacoco coverage and uses the old, original tests.-->
+          <!--<argLine>-Xmx2G -Djava.net.preferIPv4Stack=true -Dio.netty.leakDetection.level=paranoid ${test.additional.args}</argLine>-->
           <redirectTestOutputToFile>${redirectTestOutputToFile}</redirectTestOutputToFile>
           <forkCount>${forkCount.variable}</forkCount>
           <reuseForks>false</reuseForks>
