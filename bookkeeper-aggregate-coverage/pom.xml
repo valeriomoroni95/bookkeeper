@@ -15,9 +15,7 @@
     </dependencies>
 
     <properties>
-        <property>
-            <sonar.coverage.jacoco.xmlReportPaths>${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
-        </property>
+        <sonar.coverage.jacoco.xmlReportPaths>${basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
     </properties>
 
     <artifactId>bookkeeper-aggregate-coverage</artifactId>
