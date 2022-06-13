@@ -264,6 +264,9 @@
               <name>listener</name>
               <value>org.apache.bookkeeper.common.testing.util.TimedOutTestsListener</value>
             </property>
+            <property>
+              <sonar.coverage.jacoco.xmlReportPaths>${basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
+            </property>
           </properties>
         </configuration>
       </plugin>

@@ -116,7 +116,8 @@
     <test.additional.args />
 
     <!--Adding this part for Jacoco Coverage ISW2 sw testing module-->
-    <sonar.coverage.jacoco.xmlReportPaths>${maven.multiModuleProjectDirectory}/bookkeeper-aggregate-coverage/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+    <sonar.coverage.jacoco.xmlReportPaths>bookkeeper-aggregate-coverage/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+    <aggregate.report.dir>bookkeeper-aggregate-coverage/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>
     <sonar.organization>valeriomoroni95</sonar.organization>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     <!--<sonar.projectKey>valeriomoroni95_bookkeeper</sonar.projectKey>-->
