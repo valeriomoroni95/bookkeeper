@@ -1,20 +1,3 @@
-<!--
-   Licensed to the Apache Software Foundation (ASF) under one or more
-   contributor license agreements.  See the NOTICE file distributed with
-   this work for additional information regarding copyright ownership.
-   The ASF licenses this file to You under the Apache License, Version 2.0
-   (the "License"); you may not use this file except in compliance with
-   the License.  You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
--->
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
     <groupId>org.apache</groupId>
@@ -115,12 +98,28 @@
     <testRetryCount>2</testRetryCount>
     <test.additional.args />
 
-    <!--Adding this part for Jacoco Coverage ISW2 sw testing module-->
-    <sonar.coverage.jacoco.xmlReportPaths>bookkeeper-aggregate-coverage/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
-    <aggregate.report.dir>bookkeeper-aggregate-coverage/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>
+    <!--ISW2 sw testing module-->
+    
+    <coverage.report.dir>target/reports</aggregate.report.dir>
+    <surefire.report.dir>${coverage.report.dir}/surefire-reports</surefire.report.dir>
+    <jacoco.report.dir>${coverage.report.dir}/jacoco-reports</jacoco.report.dir>
+    <pit.report.dir>${coverage.report.dir}/pit-reports</pit.report.dir>
+    <!--Badua-->
+    <badua.report.dir>${coverage.report.dir}/badua-reports</badua.report.dir>
+    <badua.report.dir.win>target\coverage-reports\badua-reports</badua.report.dir.win>
+    <badua.output>target/badua.ser</badua.output>
+    <badua.jar.agent>jars/badua/ba-dua-agent-rt-0.4.1-SNAPSHOT-all.jar</badua.jar.agent>
+    <badua.jar.cli>jars/badua/ba-dua-cli-0.4.1-SNAPSHOT-all.jar</badua.jar.cli>
+    <!--Sonar-->
     <sonar.organization>valeriomoroni95</sonar.organization>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+    <sonar.coverage.jacoco.xmlReportPaths>../bookkeeper-aggregate-coverage/${jacoco.report.dir}/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
     <!--<sonar.projectKey>valeriomoroni95_bookkeeper</sonar.projectKey>-->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <javac.target>1.8</javac.target>
+    <redirectTestOutputToFile>true</redirectTestOutputToFile>
+    <testRetryCount>2</testRetryCount>
 
     <!-- dependencies -->
     <arquillian-cube.version>1.18.2</arquillian-cube.version>
@@ -155,8 +154,6 @@
     <jsoup.version>1.14.3</jsoup.version>
     <jna.version>3.2.7</jna.version>
     <junit.version>4.12</junit.version>
-    <!-- required by zookeeper test utilities imported from ZooKeeper -->
-    <junit5.version>5.8.2</junit5.version>
     <libthrift.version>0.14.2</libthrift.version>
     <lombok.version>1.18.22</lombok.version>
     <log4j.version>2.17.2</log4j.version>
@@ -518,13 +515,6 @@
             <artifactId>*</artifactId>
           </exclusion>
         </exclusions>
-      </dependency>
-
-      <dependency>
-         <!-- needed by ZooKeeper server tests utilities -->
-        <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter-api</artifactId>
-        <version>${junit5.version}</version>
       </dependency>
 
       <dependency>
@@ -908,8 +898,8 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${maven-surefire-plugin.version}</version>
         <configuration>
-          <!--This line generates conflicts with Jacoco coverage and uses the old, original tests.-->
-          <!--<argLine>-Xmx2G -Djava.net.preferIPv4Stack=true -Dio.netty.leakDetection.level=paranoid ${test.additional.args}</argLine>-->
+          <!--ISW2 - conflict lines
+          <argLine>-Xmx2G -Djava.net.preferIPv4Stack=true -Dio.netty.leakDetection.level=paranoid ${test.additional.args}</argLine>
           <redirectTestOutputToFile>${redirectTestOutputToFile}</redirectTestOutputToFile>
           <forkCount>${forkCount.variable}</forkCount>
           <reuseForks>false</reuseForks>
@@ -917,6 +907,7 @@
           <forkedProcessTimeoutInSeconds>1800</forkedProcessTimeoutInSeconds>
           <rerunFailingTestsCount>${testRetryCount}</rerunFailingTestsCount>
         </configuration>
+        -->
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -1271,11 +1262,42 @@
           <plugin>
             <groupId>org.jacoco</groupId>
             <artifactId>jacoco-maven-plugin</artifactId>
+            <version>0.8.8</version>
             <executions>
               <execution>
                 <id>prepare-agent</id>
                 <goals>
                   <goal>prepare-agent</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>isw2-mutation-profile</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.pitest</groupId>
+            <artifactId>pitest-maven</artifactId>
+            <version>1.8.0</version>
+            <configuration>
+              <outputFormats>
+                <param>HTML</param>
+                <param>XML</param>
+              </outputFormats>
+              <verbose>true</verbose>
+              <exportLineCoverage>true</exportLineCoverage>
+              <timestampedReports>false</timestampedReports>
+            </configuration>
+            <executions>
+              <execution>
+                <id>pitest-mutation-coverage</id>
+                <phase>test</phase>
+                <goals>
+                  <goal>mutationCoverage</goal>
                 </goals>
               </execution>
             </executions>

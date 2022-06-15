@@ -24,10 +24,28 @@
   </parent>
   <artifactId>bookkeeper-server</artifactId>
   <name>Apache BookKeeper :: Server</name>
+
+  <!--ISW2 configurations-->
   <properties>
-    <sonar.coverage.jacoco.xmlReportPaths>${basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
+    <!--<sonar.coverage.jacoco.xmlReportPaths>${basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>-->
+    <target.class>target/classes/org/apache/bookkeeper</target.class>
+    <badua.agent>-javaagent:${badua.jar.agent} -Doutput.file=${badua.output}</badua.agent>
+    <badua.unix.cli> mkdir ${badua.report.dir} | java -jar ${badua.jar.cli} report -classes ${target.class} -input ${badua.output} -xml ${badua.report.dir}/coverage.xml </badua.unix.cli>
   </properties>
   <dependencies>
+  <!--Mockito dependency-->
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>4.6.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-inline</artifactId>
+      <version>4.6.1</version>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>org.apache.bookkeeper</groupId>
       <artifactId>bookkeeper-common</artifactId>
@@ -215,6 +233,11 @@
   </dependencies>
   <build>
     <plugins>
+    <!--JaCoCo plugin-->
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
