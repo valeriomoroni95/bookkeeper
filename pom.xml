@@ -100,7 +100,7 @@
 
     <!--ISW2 sw testing module-->
     
-    <coverage.report.dir>target/reports</aggregate.report.dir>
+    <coverage.report.dir>target/reports</coverage.report.dir>
     <surefire.report.dir>${coverage.report.dir}/surefire-reports</surefire.report.dir>
     <jacoco.report.dir>${coverage.report.dir}/jacoco-reports</jacoco.report.dir>
     <pit.report.dir>${coverage.report.dir}/pit-reports</pit.report.dir>
