@@ -1074,16 +1074,16 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-plugin</artifactId>
             <version>${maven-surefire-plugin.version}</version>
-            <configuration>
-              <!-- @{argLine} is a variable injected by JaCoCo-->
+            <!--<configuration>
+              <!- @{argLine} is a variable injected by JaCoCo
               <argLine>@{argLine} -Xmx2G -Djava.net.preferIPv4Stack=true</argLine>
               <redirectTestOutputToFile>${redirectTestOutputToFile}</redirectTestOutputToFile>
               <forkCount>${forkCount.variable}</forkCount>
               <reuseForks>false</reuseForks>
               <forkedProcessTimeoutInSeconds>1800</forkedProcessTimeoutInSeconds>
-              <!-- we want build to complete even in case of failures -->
+              <!- we want build to complete even in case of failures
               <testFailureIgnore>true</testFailureIgnore>
-            </configuration>
+            </configuration>-->
           </plugin>
           <plugin>
             <groupId>org.jacoco</groupId>
@@ -1162,7 +1162,7 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-plugin</artifactId>
             <version>${maven-surefire-plugin.version}</version>
-            <configuration>
+            <!--<configuration>
               <argLine>-Xmx2G -Djava.net.preferIPv4Stack=true</argLine>
               <redirectTestOutputToFile>false</redirectTestOutputToFile>
               <forkCount>${forkCount.variable}</forkCount>
@@ -1170,7 +1170,7 @@
               <forkedProcessTimeoutInSeconds>1800</forkedProcessTimeoutInSeconds>
               <trimStackTrace>false</trimStackTrace>
               <rerunFailingTestsCount>0</rerunFailingTestsCount>
-            </configuration>
+            </configuration>-->
           </plugin>
         </plugins>
       </build>
@@ -1183,14 +1183,14 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-plugin</artifactId>
             <version>${maven-surefire-plugin.version}</version>
-            <configuration>
+            <!--<configuration>
               <argLine>-Xmx2G -Djava.net.preferIPv4Stack=true -Dbookkeeper.log.root.level=INFO -Dbookkeeper.log.root.appender=CONSOLE</argLine>
               <redirectTestOutputToFile>false</redirectTestOutputToFile>
               <forkCount>${forkCount.variable}</forkCount>
               <reuseForks>false</reuseForks>
               <forkedProcessTimeoutInSeconds>1800</forkedProcessTimeoutInSeconds>
               <trimStackTrace>false</trimStackTrace>
-            </configuration>
+            </configuration>-->
           </plugin>
         </plugins>
       </build>

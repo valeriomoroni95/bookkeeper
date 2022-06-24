@@ -1,10 +1,12 @@
 package org.apache.bookkeeper.client;
 
+import org.apache.bookkeeper.test.BookKeeperClusterTestCase;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -12,9 +14,13 @@ import java.util.Enumeration;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(Parameterized.class)
-public class LedgerHandleAddEntryTest {
+public class LedgerHandleAddEntryTest extends BookKeeperClusterTestCase {
+
 
     //Declaration of widely used string in test class.
+
+    //Default Bookies Number value, used in test classes.
+    private static final int BookiesNumber = 10;
     public static final String NotExpectedException = "I wasn't expecting this exception to be raised right here: ";
 
     //BookKeeper default dygest type, used in test classes.
@@ -39,6 +45,7 @@ public class LedgerHandleAddEntryTest {
 
     //Public constructor --> It calls the configure method.
     public LedgerHandleAddEntryTest(byte[] data, int offset, int length, String expectedOutcome){
+        super(BookiesNumber);
         configure(data, offset, length, expectedOutcome);
     }
 
@@ -55,7 +62,7 @@ public class LedgerHandleAddEntryTest {
     @Parameterized.Parameters
     public static Collection<Object[]> getTestParameters() {
         // Build an array with bytes out of the byte size.
-        Integer outOfLimitsValue = -5400;
+        Integer outOfLimitsValue = -4000;
         Byte outOfLimitsByteValue = outOfLimitsValue.byteValue();
         byte[] outOfLimitsByteArray = {outOfLimitsByteValue, outOfLimitsByteValue};
         int stringLength = ValidString.length();
@@ -76,12 +83,11 @@ public class LedgerHandleAddEntryTest {
     }
 
     //Before each test, I need to instantiate LedgerHandle class. To accomplish this, I need to create a Ledger.
-    //MockBookKeeper class needed to instantiate Bookkeeper class to call createLedger method.
     @Before
     public void setupTheEnvironment() {
         try {
-            MockBookKeeper mbk = new MockBookKeeper(null);
-            lh = mbk.createLedger(DefaultDygestType, Password.getBytes());
+            //bkc is a BookkeeperTestClient istance, in BookkeeperClusterTestCase, needed to setup the environment.
+            lh = bkc.createLedger(DefaultDygestType, Password.getBytes());
         } catch (BKException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {

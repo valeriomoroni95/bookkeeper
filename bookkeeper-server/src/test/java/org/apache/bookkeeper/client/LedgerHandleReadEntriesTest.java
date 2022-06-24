@@ -1,5 +1,6 @@
 package org.apache.bookkeeper.client;
 
+import org.apache.bookkeeper.test.BookKeeperClusterTestCase;
 import org.apache.commons.lang.ArrayUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -15,11 +16,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(Parameterized.class)
-public class LedgerHandleReadEntriesTest {
+public class LedgerHandleReadEntriesTest extends BookKeeperClusterTestCase {
+
 
     //Declaration of widely used string in test class.
 
     //BookKeeper default dygest type, used in test classes.
+
+    private static final int BookiesNumber = 10;
     public static final BookKeeper.DigestType DefaultDygestType = BookKeeper.DigestType.CRC32;
     //Bookkeeper default number of entries, used in test classes.
     public static final int NumberOfEntries = 10;
@@ -49,6 +53,7 @@ public class LedgerHandleReadEntriesTest {
 
     //Public constructor --> It calls the configure method.
     public LedgerHandleReadEntriesTest(long firstEntry, long lastEntry, String expectedOutcome){
+        super(BookiesNumber);
         configure(firstEntry,lastEntry,expectedOutcome);
     }
 
@@ -75,13 +80,12 @@ public class LedgerHandleReadEntriesTest {
 
 
     //Before each test, I need to instantiate LedgerHandle class. To accomplish this, I need to create a Ledger.
-    //MockBookKeeper class needed to instantiate Bookkeeper class to call createLedger method. After that, I write
-    //NumberOfEntries entries into it.
+    //After that, I write NumberOfEntries entries into it.
     @Before
     public void setup() {
         try {
-            MockBookKeeper mbk = new MockBookKeeper(null);
-            lh = mbk.createLedger(DefaultDygestType, Password.getBytes());
+            //bkc is a BookkeeperTestClient istance, in BookkeeperClusterTestCase, needed to setup the environment.
+            lh = bkc.createLedger(DefaultDygestType, Password.getBytes());
         } catch (BKException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {

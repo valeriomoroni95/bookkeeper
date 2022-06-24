@@ -279,11 +279,11 @@
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-maven-plugin</artifactId>
       </plugin>
-      <!--<plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${maven-surefire-plugin.version}</version>
-        <configuration>
+        <!--<configuration>
           <trimStackTrace>false</trimStackTrace>
           <properties>
             <property>
@@ -291,8 +291,8 @@
               <value>org.apache.bookkeeper.common.testing.util.TimedOutTestsListener</value>
             </property>
           </properties>
-        </configuration>
-      </plugin>-->
+        </configuration>-->
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
@@ -355,7 +355,7 @@
       </build>
     </profile>
     <!-- test profiles -->
-    <profile>
+    <!--<profile>
       <id>skipBookKeeperServerTests</id>
       <activation>
         <property>
@@ -373,6 +373,6 @@
           </plugin>
         </plugins>
       </build>
-    </profile>
+    </profile>-->
   </profiles>
 </project>
