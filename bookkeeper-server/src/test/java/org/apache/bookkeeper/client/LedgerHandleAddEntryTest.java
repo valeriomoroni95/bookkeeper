@@ -21,18 +21,18 @@ public class LedgerHandleAddEntryTest extends BookKeeperClusterTestCase {
 
     //Default Bookies Number value, used in test classes.
     private static final int BookiesNumber = 10;
-    public static final String NotExpectedException = "I wasn't expecting this exception to be raised right here: ";
+    private static final String NotExpectedException = "I wasn't expecting this exception to be raised right here: ";
 
-    //BookKeeper default dygest type, used in test classes.
-    public static final BookKeeper.DigestType DefaultDygestType = BookKeeper.DigestType.CRC32;
-    public static final String ValidString = "This string should be valid, should not generate any problems and should be long enough to be a valid parameter";
-    public static final String EmptyString = "";
-    public static final String Password = "generic_password";
+    //BookKeeper default digest type, used in test classes.
+    private static final BookKeeper.DigestType DefaultDigestType = BookKeeper.DigestType.CRC32;
+    private static final String ValidString = "This string should be valid, should not generate any problems and should be long enough to be a valid parameter";
+    private static final String EmptyString = "";
+    private static final String Password = "generic_password";
 
     //Using a black-box approach, I'm using strings defining what I expect from each test case.
-    public static final String Success = "Passed.";
-    public static final String Fail = "Failed.";
-    public static final String ShouldFail = "I was expecting this test to fail, but it didn't.";
+    private static final String Success = "Passed.";
+    private static final String Fail = "Failed.";
+    private static final String ShouldFail = "I was expecting this test to fail, but it didn't.";
 
     // Test parameters.
     private static byte[] data;
@@ -43,7 +43,7 @@ public class LedgerHandleAddEntryTest extends BookKeeperClusterTestCase {
     // Class under test.
     private LedgerHandle lh;
 
-    //Public constructor --> It calls the configure method.
+    //Public constructor --> It calls the configure method and calls the parent constructor
     public LedgerHandleAddEntryTest(byte[] data, int offset, int length, String expectedOutcome){
         super(BookiesNumber);
         configure(data, offset, length, expectedOutcome);
@@ -86,8 +86,8 @@ public class LedgerHandleAddEntryTest extends BookKeeperClusterTestCase {
     @Before
     public void setupTheEnvironment() {
         try {
-            //bkc is a BookkeeperTestClient istance, in BookkeeperClusterTestCase, needed to setup the environment.
-            lh = bkc.createLedger(DefaultDygestType, Password.getBytes());
+            //bkc is a BookkeeperTestClient instance, in BookkeeperClusterTestCase, needed to setup the environment.
+            lh = bkc.createLedger(DefaultDigestType, Password.getBytes());
         } catch (BKException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {

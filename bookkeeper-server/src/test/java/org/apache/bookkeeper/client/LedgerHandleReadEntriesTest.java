@@ -24,23 +24,23 @@ public class LedgerHandleReadEntriesTest extends BookKeeperClusterTestCase {
     //BookKeeper default dygest type, used in test classes.
 
     private static final int BookiesNumber = 10;
-    public static final BookKeeper.DigestType DefaultDygestType = BookKeeper.DigestType.CRC32;
+    private static final BookKeeper.DigestType DefaultDigestType = BookKeeper.DigestType.CRC32;
     //Bookkeeper default number of entries, used in test classes.
-    public static final int NumberOfEntries = 10;
-    public static final String Password = "generic_password";
+    private static final int NumberOfEntries = 10;
+    private static final String Password = "generic_password";
 
-    public static final String ValidString = "This string should be valid, should not generate any problems and should be long enough to be a valid parameter";
+    private static final String ValidString = "This string should be valid, should not generate any problems and should be long enough to be a valid parameter";
     // Creating a generic byte buffer.
-    public static byte[] ValidByteData = ValidString.getBytes();
-    public static final int ValidOffset = 0;
-    public static int ValidDataLength = ValidByteData.length;
+    private static byte[] ValidByteData = ValidString.getBytes();
+    private static final int ValidOffset = 0;
+    private static int ValidDataLength = ValidByteData.length;
 
     //Using a black-box approach, I'm using strings defining what I expect from each test case.
-    public static final String Success = "Passed.";
-    public static final String Fail = "Failed.";
+    private static final String Success = "Passed.";
+    private static final String Fail = "Failed.";
 
-    public static final String NotExpectedException = "I wasn't expecting this exception to be raised right here: ";
-    public static final String ShouldFail = "I was expecting this test to fail, but it didn't.";
+    private static final String NotExpectedException = "I wasn't expecting this exception to be raised right here: ";
+    private static final String ShouldFail = "I was expecting this test to fail, but it didn't.";
 
     // Test parameters.
     private static long firstEntry;
@@ -75,6 +75,10 @@ public class LedgerHandleReadEntriesTest extends BookKeeperClusterTestCase {
                 {     1,            1,           Success},
                 {     0,           -1,              Fail},
                 {    -1,            0,              Fail},
+                /*// added test cases to boost coverage up
+                {     0,   NumberOfEntries - 1,     PASS},
+                {     0,   NumberOfEntries,         FAIL},
+                {     0,   NumberOfEntries + 1,     FAIL},*/
         });
     }
 
@@ -85,7 +89,7 @@ public class LedgerHandleReadEntriesTest extends BookKeeperClusterTestCase {
     public void setup() {
         try {
             //bkc is a BookkeeperTestClient istance, in BookkeeperClusterTestCase, needed to setup the environment.
-            lh = bkc.createLedger(DefaultDygestType, Password.getBytes());
+            lh = bkc.createLedger(DefaultDigestType, Password.getBytes());
         } catch (BKException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
