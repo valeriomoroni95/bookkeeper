@@ -20,10 +20,8 @@ public class LedgerHandleReadEntriesTest extends BookKeeperClusterTestCase {
 
 
     //Declaration of widely used string in test class.
-
-    //BookKeeper default dygest type, used in test classes.
-
     private static final int BookiesNumber = 10;
+    //BookKeeper default dygest type, used in test classes.
     private static final BookKeeper.DigestType DefaultDigestType = BookKeeper.DigestType.CRC32;
     //Bookkeeper default number of entries, used in test classes.
     private static final int NumberOfEntries = 10;
@@ -75,10 +73,10 @@ public class LedgerHandleReadEntriesTest extends BookKeeperClusterTestCase {
                 {     1,            1,           Success},
                 {     0,           -1,              Fail},
                 {    -1,            0,              Fail},
-                /*// added test cases to boost coverage up
-                {     0,   NumberOfEntries - 1,     PASS},
-                {     0,   NumberOfEntries,         FAIL},
-                {     0,   NumberOfEntries + 1,     FAIL},*/
+                // Added test cases considering entries actually written in the Ledger
+                {     0,   NumberOfEntries - 1,     Success},
+                {     0,   NumberOfEntries,         Fail},
+                {     0,   NumberOfEntries + 1,     Fail}
         });
     }
 
@@ -88,7 +86,7 @@ public class LedgerHandleReadEntriesTest extends BookKeeperClusterTestCase {
     @Before
     public void setup() {
         try {
-            //bkc is a BookkeeperTestClient istance, in BookkeeperClusterTestCase, needed to setup the environment.
+            //bkc is a BookkeeperTestClient instance, in BookkeeperClusterTestCase, needed to setup the environment.
             lh = bkc.createLedger(DefaultDigestType, Password.getBytes());
         } catch (BKException e) {
             e.printStackTrace();
@@ -97,8 +95,10 @@ public class LedgerHandleReadEntriesTest extends BookKeeperClusterTestCase {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+        //Looping til NumberOfEntries
         for (int i = 0; i < NumberOfEntries; i++) {
             try {
+                //Add one entry with above declared values.
                 lh.addEntry(ValidByteData, ValidOffset, ValidDataLength);
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -112,23 +112,32 @@ public class LedgerHandleReadEntriesTest extends BookKeeperClusterTestCase {
     //Test method.
     @Test
     public void ledgerReadEntriesTest() {
+        //Declaring an enumeration of entries, with initial null value.
         Enumeration<LedgerEntry> entries = null;
         try {
             //Try the method under test passing each test case from getTestParameters()
             entries = lh.readEntries(firstEntry, lastEntry);
         } catch (Exception e) {
+            //If something goes wrong here, it means readEntries has failed.
             assertTrue(buildExceptionString(e), expectedOutcome == Fail);
             return;
         }
+        //It should be true that there are more elements in my enumeration.
         assertTrue("Enumeration read is empty.", entries.hasMoreElements());
+        //Declaring and initializing readEntries
         int readEntries = 0;
         // Read each entry and check if what I wrote is what I'm reading.
         while (entries.hasMoreElements()) {
+            //Get the next element.
             LedgerEntry entry = entries.nextElement();
+            //Assert that I correctly read the entry, comparing it to a substring equal to what I expect
             assertTrue("What I'm reading is different from the input", Arrays.equals(entry.getEntry(), ArrayUtils.subarray(ValidByteData, ValidOffset, ValidDataLength)));
+            //Increasing the number of read entries
             readEntries++;
         }
+        //Asserting that the number of entries I read are the same of the input.
         assertEquals("I'm reading less entries comparing them to the input", lastEntry - firstEntry + 1, readEntries);
+        //If everything went well, I expect a success.
         assertTrue(ShouldFail, expectedOutcome == Success);
     }
 

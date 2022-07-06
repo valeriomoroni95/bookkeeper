@@ -8,7 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-
 import java.io.ByteArrayInputStream;
 import java.util.Arrays;
 import java.util.Collection;
@@ -22,11 +21,13 @@ public class BookKeeperAdminFormatTest extends BookKeeperClusterTestCase{
     private final BookKeeper.DigestType DefaultDigestType = BookKeeper.DigestType.CRC32;
 
     private final String DefaultPassword = "Default_Password";
+
+    //used to instantiate the super class and to create a ledger in setup phase.
     private static final int BookiesNumber = 2;
 
-    private final boolean hasAValidServerConfiguration;
+    private final boolean hasAValidServerConfiguration; //if ServerConfiguration is valid or not
     private final boolean isInteractive; //Whether format should ask prompt for confirmation if old data exists or not.
-    private final boolean isInteractiveClient; //client answer
+    private final boolean isInteractiveClient; //Client answer
     private final boolean force; //If non-interactive and force is true, then old data will be removed without prompt.
     private boolean expectedOutcome;
 
@@ -65,7 +66,7 @@ public class BookKeeperAdminFormatTest extends BookKeeperClusterTestCase{
 
         System.out.println("Configuring test environment");
         try {
-            //Calling parent constructor setup
+            //Calling parent constructor setup method
             super.setUp();
         }catch (Exception e){ e.printStackTrace(); }
 
@@ -75,6 +76,7 @@ public class BookKeeperAdminFormatTest extends BookKeeperClusterTestCase{
             //set the metadataServiceUri from Zookeeper Cluster
             conf.setMetadataServiceUri(zkUtil.getMetadataServiceUri());
 
+            //Declaring how many ledgers I want to create
             int numOfLedgers = 2;
 
             //Create a bookkeeper client using a configuration object.
@@ -82,9 +84,10 @@ public class BookKeeperAdminFormatTest extends BookKeeperClusterTestCase{
             //instantiated as part of this constructor.
             try (BookKeeper bkc = new BookKeeper(conf)) {
                 //Adding 2 ledgers
-                for (int n = 0; n < numOfLedgers; n++) {
+                for (int i = 0; i < numOfLedgers; i++) {
                     try (LedgerHandle lh = bkc.createLedger(BookiesNumber, BookiesNumber, DefaultDigestType, DefaultPassword.getBytes())) {
                         //Adding entry for each ledger
+                        //Using a random entry
                         lh.addEntry("000".getBytes());
                     }
                 }
@@ -104,19 +107,21 @@ public class BookKeeperAdminFormatTest extends BookKeeperClusterTestCase{
     public void formatTest() {
 
         System.out.println("Starting format test");
+
         boolean outcome;
 
         //If both isInteractive and isInteractiveClient are true, set new standard input stream,
         //Creates ByteArrayInputStream that uses buf as its buffer array. The initial value of
-        //pos is offset and the initial value of count is the minimum of offset+length and buf.length.
+        //position is offset and the initial value of count is the minimum of offset+length and buf.length.
         if (isInteractive) {
+            //If this param is true, the client wrote "y\n". length is 2 because "y\n" are 2 bytes.
             if (isInteractiveClient) System.setIn(new ByteArrayInputStream("y\n".getBytes(), 0, 2));
             //Otherwise, the client pressed "n\n", so do the same with that buf.
             else System.setIn(new ByteArrayInputStream("n\n".getBytes(), 0, 2));
         }
 
         try{
-            //If hasAValidServerConfiguration is true, call format with inherited baseConf
+            //If hasAValidServerConfiguration is true, call format with inherited baseConf, from BookKeeperClusterTestCase.
             if(hasAValidServerConfiguration) outcome = BookKeeperAdmin.format(baseConf, isInteractive, force);
             //Otherwise, call it passing null
             else outcome = BookKeeperAdmin.format(null, isInteractive, force);

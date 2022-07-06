@@ -100,29 +100,44 @@ public class LedgerHandleAddEntryTest extends BookKeeperClusterTestCase {
     //Test method.
     @Test
     public void ledgerAddEntryThenReadIt() {
+
+        //Initializing the return value.
         long returnValue = -1;
         try {
             // Try the method under test passing each test case from getTestParameters()
+            // The return value here is the entryID of the new inserted entry.
             returnValue = lh.addEntry(data, offset, length);
         } catch (Exception e) {
+            //If something happens here, it means addEntry has failed.
             assertTrue(notExpectedExceptionString(e), expectedOutcome == Fail);
             return;
         }
+        //If everything is fine, returnValue should be >=0
         assertTrue("Invalid entry ID: " + returnValue, returnValue >= 0);
 
         //Now I read to check what I wrote
+        //I declare an enumeration of entries, initialized to null.
         Enumeration<LedgerEntry> entries = null;
         try {
+            //Read entries from the first one till the last confirmed
             entries = lh.readEntries(0, lh.getLastAddConfirmed());
         } catch (Exception e) {
+            //If something goes bad here, readEntries has failed.
             assertTrue(notExpectedExceptionString(e), expectedOutcome == Fail);
         }
+        //while there are elements in the enumeration
         while (entries.hasMoreElements()) {
+            //Get the next element
             LedgerEntry entry = entries.nextElement();
+            //Get the content of the entry
             byte[] returned = entry.getEntry();
+            //Create a new String, starting from offset and reaching offset + length
+            //in order to obtain a substring with length --> length
             String newString = new String(data).substring(offset, offset + length);
+            //Check if what I read is exactly the same string that I wrote
             assertTrue("Input and output doesn't coincide." + newString + " --- " + new String(returned), Arrays.equals(newString.getBytes(), returned));
         }
+        //If everything goes well, mark this test with Success
         assertTrue(ShouldFail, expectedOutcome == Success);
     }
 
