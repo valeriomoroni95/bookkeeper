@@ -106,7 +106,6 @@
     <pit.report.dir>${coverage.report.dir}/pit-reports</pit.report.dir>
     <!--Badua-->
     <badua.report.dir>${coverage.report.dir}/badua-reports</badua.report.dir>
-    <!--<badua.report.dir.win>target\coverage-reports\badua-reports</badua.report.dir.win>-->
     <badua.output>target/badua.ser</badua.output>
     <badua.jar.agent>jars/badua/ba-dua-agent-rt-0.4.1-SNAPSHOT-all.jar</badua.jar.agent>
     <badua.jar.cli>jars/badua/ba-dua-cli-0.4.1-SNAPSHOT-all.jar</badua.jar.cli>

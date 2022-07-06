@@ -354,7 +354,7 @@
         </plugins>
       </build>
     </profile>
-    <!--Mutation profile-->
+    <!--ISW2 Mutation profile-->
     <profile>
       <id>mutation-profile</id>
       <activation>
